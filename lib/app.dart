@@ -42,7 +42,6 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightMode,
         home: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {},
           builder: (context, authState) {
             print(authState);
             // jika user terauthentikasi, munculkan Home Page
@@ -59,6 +58,15 @@ class MainApp extends StatelessWidget {
               return const Scaffold(
                 body: Center(child: CircularProgressIndicator()),
               );
+            }
+          },
+
+          // error handling
+          listener: (context, state) {
+            if (state is AuthError) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
             }
           },
         ),
