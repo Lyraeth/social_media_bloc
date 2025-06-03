@@ -4,6 +4,7 @@ import 'package:social_media_bloc/features/auth/data/api_auth_repository.dart';
 import 'package:social_media_bloc/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:social_media_bloc/features/auth/presentation/cubits/auth_state.dart';
 import 'package:social_media_bloc/features/auth/presentation/pages/login_page.dart';
+import 'package:social_media_bloc/features/dashboard/presentation/components/bottom_menu/bloc/bottom_menu_bloc.dart';
 import 'package:social_media_bloc/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:social_media_bloc/themes/light_mode.dart';
 
@@ -35,9 +36,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Provide Cubit ke Aplikasi
-    return BlocProvider(
-      create: (context) =>
-          AuthCubit(apiAuthRepository: apiAuthRepository)..checkAuth(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              AuthCubit(apiAuthRepository: apiAuthRepository)..checkAuth(),
+        ),
+        BlocProvider(create: (context) => BottomMenuBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: lightMode,

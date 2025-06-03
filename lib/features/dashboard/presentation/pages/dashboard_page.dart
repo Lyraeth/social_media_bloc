@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_media_bloc/features/dashboard/presentation/components/my_bottom_navigation.dart';
+import 'package:social_media_bloc/features/dashboard/presentation/components/bottom_menu/my_bottom_navigation.dart';
 import 'package:social_media_bloc/features/dashboard/presentation/components/my_drawer.dart';
 
 class DashboardPage extends StatefulWidget {

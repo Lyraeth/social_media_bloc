@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_media_bloc/features/dashboard/presentation/components/my_bottom_navigation_items.dart';
+import 'package:social_media_bloc/features/dashboard/presentation/components/bottom_menu/my_bottom_navigation_items.dart';
 
 class MyBottomNavigation extends StatefulWidget {
   const MyBottomNavigation({super.key});
