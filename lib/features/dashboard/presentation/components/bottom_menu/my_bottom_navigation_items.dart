@@ -10,6 +10,13 @@ class MyBottomNavigationItems extends StatelessWidget {
   const MyBottomNavigationItems({super.key});
 
   void _handleNavigation(BuildContext context, int index) {
+    // Ambil currentIndex sekarang di BloC
+    final currentIndex = context.read<BottomMenuBloc>().state.currentIndex;
+
+    // kalo index yang dipilih sama kayak currentIndex di BloC
+    // gabakal nampilin halaman yang sama
+    if (index == currentIndex) return;
+
     Widget targetPage;
 
     switch (index) {
