@@ -6,7 +6,9 @@ import 'package:social_media_bloc/features/auth/presentation/cubits/auth_state.d
 import 'package:social_media_bloc/features/auth/presentation/pages/login_page.dart';
 import 'package:social_media_bloc/features/dashboard/presentation/components/bottom_menu/bloc/bottom_menu_bloc.dart';
 import 'package:social_media_bloc/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:social_media_bloc/themes/light_mode.dart';
+import 'package:social_media_bloc/features/profile/data/api_profile_repository.dart';
+import 'package:social_media_bloc/features/profile/presentation/cubits/profile_cubit.dart';
+import 'package:social_media_bloc/themes/cubits/theme_cubit.dart';
 
 /*
 APP – Root Level
@@ -28,8 +30,9 @@ Check Auth State
 */
 
 class MainApp extends StatelessWidget {
-  // AuthRepository
+  // Repository
   final apiAuthRepository = ApiAuthRepository();
+  final apiProfileRepository = ApiProfileRepository();
 
   MainApp({super.key});
 
@@ -38,44 +41,59 @@ class MainApp extends StatelessWidget {
     // Provide Cubit ke Aplikasi
     return MultiBlocProvider(
       providers: [
+        // Auth Cubit
         BlocProvider(
           create: (context) =>
               AuthCubit(apiAuthRepository: apiAuthRepository)..checkAuth(),
         ),
+
+        // BottomMenu Cubit
         BlocProvider(create: (context) => BottomMenuBloc()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: lightMode,
-        home: BlocConsumer<AuthCubit, AuthState>(
-          builder: (context, authState) {
-            print(authState);
-            // jika user terauthentikasi, munculkan Home Page
-            if (authState is Authenticated) {
-              return const DashboardPage();
-            }
 
-            // jika user tidak terauthentikasi, munculkan Login Page
-            if (authState is Unauthenticated) {
-              return const LoginPage();
-            }
-            // loading...
-            else {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
-          },
-
-          // error handling
-          listener: (context, state) {
-            if (state is AuthError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
-            }
-          },
+        // Profile Cubit
+        BlocProvider<ProfileCubit>(
+          create: (context) =>
+              ProfileCubit(apiProfileRepository: apiProfileRepository),
         ),
+
+        // Theme Cubit
+        BlocProvider<ThemeCubit>(create: (context) => ThemeCubit()),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeData>(
+        builder: (context, currentTheme) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: currentTheme,
+            home: BlocConsumer<AuthCubit, AuthState>(
+              builder: (context, authState) {
+                // jika user terauthentikasi, munculkan Home Page
+                if (authState is Authenticated) {
+                  return const DashboardPage();
+                }
+
+                // jika user tidak terauthentikasi, munculkan Login Page
+                if (authState is Unauthenticated) {
+                  return const LoginPage();
+                }
+                // loading...
+                else {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+              },
+
+              // error handling
+              listener: (context, state) {
+                if (state is AuthError) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                }
+              },
+            ),
+          );
+        },
       ),
     );
   }

@@ -8,7 +8,11 @@ part 'bottom_menu_state.dart';
 class BottomMenuBloc extends Bloc<BottomMenuEvent, BottomMenuState> {
   BottomMenuBloc() : super(const BottomMenuState(currentIndex: 0)) {
     on<BottomMenuChanged>((event, emit) {
-      if (event.index == state.currentIndex) return;
+      if (event.index != state.currentIndex) {
+        emit(BottomMenuState(currentIndex: event.index));
+      } else if (event.index == state.currentIndex) {
+        return;
+      }
     });
   }
 }

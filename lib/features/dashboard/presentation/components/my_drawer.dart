@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_bloc/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:social_media_bloc/features/dashboard/presentation/components/my_drawer_tile.dart';
+import 'package:social_media_bloc/features/settings/settings_page.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -24,7 +25,7 @@ class _MyDrawerState extends State<MyDrawer> {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
+          child: ListView(
             children: [
               const SizedBox(height: 50),
               Padding(
@@ -100,6 +101,15 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
 
               Divider(color: Theme.of(context).colorScheme.primary),
+
+              MyDrawerTile(
+                title: "Settings",
+                leadingIcon: Icons.settings,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                ),
+              ),
 
               const Spacer(),
 

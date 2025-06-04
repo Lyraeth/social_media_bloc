@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_bloc/features/dashboard/presentation/components/bottom_menu/bloc/bottom_menu_bloc.dart';
 import 'package:social_media_bloc/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:social_media_bloc/features/notification/presentation/pages/notification_page.dart';
-import 'package:social_media_bloc/features/profile/presentation/pages/profile_page.dart';
+import 'package:social_media_bloc/features/profile/presentation/pages/profile_layout.dart';
 import 'package:social_media_bloc/features/search/presentation/pages/search_page.dart';
 
 class MyBottomNavigationItems extends StatelessWidget {
@@ -12,7 +12,6 @@ class MyBottomNavigationItems extends StatelessWidget {
   void _handleNavigation(BuildContext context, int index) {
     // Ambil currentIndex sekarang di BloC
     final currentIndex = context.read<BottomMenuBloc>().state.currentIndex;
-
     // kalo index yang dipilih sama kayak currentIndex di BloC
     // gabakal nampilin halaman yang sama
     if (index == currentIndex) return;
@@ -30,14 +29,21 @@ class MyBottomNavigationItems extends StatelessWidget {
         targetPage = const SearchPage();
         break;
       case 3:
-        targetPage = const ProfilePage();
+        targetPage = const ProfileLayout();
         break;
       default:
         return;
     }
 
     // Navigator push ke halaman baru
-    Navigator.push(context, MaterialPageRoute(builder: (_) => targetPage));
+    Navigator.push(context, MaterialPageRoute(builder: (_) => targetPage))
+        .then((_) => context.read<BottomMenuBloc>().add(BottomMenuChanged(0)))
+        .then(
+          (_) => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DashboardPage()),
+          ),
+        );
 
     // Optional: update index di bloc juga, kalau masih dipakai
     context.read<BottomMenuBloc>().add(BottomMenuChanged(index));
